@@ -37,36 +37,10 @@ ratio = im.shape[0] / float(resized.shape[0])
 
 kernel = np.ones((2,2),np.uint16)
 erosion = cv2.dilate(resized,kernel,iterations = 1)
-imgray = cv2.cvtColor(erosion,cv2.COLOR_BGR2GRAY)
-cv2.imshow("SImage", imgray)
-
-adjusted = cv2.Canny(imgray, 50, 200)
-#ret, adjusted = cv2.threshold(imgray, 60, 255, 0)
-#adjusted = ~adjusted
-
-cv2.imshow("SIEmage", adjusted)
-
+adjusted = cv2.Canny(erosion, 50, 200)
 image, cnts, hierarchy = cv2.findContours(adjusted, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
 
 sd = ShapeDetector()
-
-#img = cv2.drawContours(im, cnts, -1, (0,0,0), 2)
-#cv2.imshow("copy", img)
-#cv2.waitKey(0)
-
-#cntsort = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
- 
-# sort the contours according to the provided method
-#(cntsort, boundingBoxes) = sort_contours(cnts, "left-to-right")
- 
-# loop over the (now sorted) contours and draw them
-#for (i, c) in enumerate(cntsort):
-#	cv2.drawContours(resized, [c], -1, (0, 255, 0), 1)
- 
-# show the output image
-#cv2.imshow("Sorted", adjusted)
-#cv2.waitKey(0)
-
 
 # loop over the contours
 for c in cnts:
@@ -81,7 +55,7 @@ for c in cnts:
 	cY = int(cY/len(c))
 	
 		
-	if(cv2.contourArea(c) <= 500 or cv2.contourArea(c) >= 30000):
+	if(cv2.contourArea(c) <= 30 or cv2.contourArea(c) >= 30000):
 		print("possible invalid shape")
 		
 	elif(cv2.contourArea(c) <= 1000):
